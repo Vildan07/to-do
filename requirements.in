@@ -1,0 +1,9 @@
+fastapi[standard]
+pydantic
+sqlalchemy
+bcrypt
+pymysql
+python-jose
+passlib
+aiogram
+firebase-admin
