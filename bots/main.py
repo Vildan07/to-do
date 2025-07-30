@@ -17,4 +17,6 @@ async def send_telegram_message(message: str, db: Session):
     }
     async with httpx.AsyncClient() as client:
         response = await client.post(url, json=payload)
+        res = response.json()
+        print(f"Qaytgan natija: {res}")
         return response.json()
