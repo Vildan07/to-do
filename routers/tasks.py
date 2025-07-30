@@ -1,4 +1,5 @@
 from fastapi import APIRouter, status, HTTPException, Depends, WebSocket, WebSocketDisconnect, BackgroundTasks
+from fastapi.encoders import jsonable_encoder
 from firebase_admin import messaging
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
@@ -44,7 +45,7 @@ async def create_task(task: TasksCreate, db: Session = Depends(get_db), current_
     # WebSocket broadcast
     await manager.broadcast(json.dumps({
         "event": "task_created",
-        "task": TasksResponse.from_orm(new_task).model_dump()
+        "task": jsonable_encoder(TasksResponse.from_orm(new_task))
     }))
     users = db.query(Users).all()
     for user in users:
