@@ -21,7 +21,7 @@ import json
 tasks_router = APIRouter(tags=["Tasks"])
 
 
-@tasks_router.post("/tasks")
+@tasks_router.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(task: TasksCreate, db: Session = Depends(get_db), current_user: UsersResponse = Depends(get_current_user)):
     data = db.query(Tasks).filter(Tasks.title == task.title, Tasks.user_id == current_user.id).first()
     if data:
