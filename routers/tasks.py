@@ -163,7 +163,7 @@ async def update_task(task_id: int, task: TasksUpdate, db: Session = Depends(get
     # WebSocket broadcast
     await manager.broadcast(json.dumps({
         "event": "task_updated",
-        "task": TasksResponse.from_orm(existing_task).model_dump()
+        "task": json.loads(TasksResponse.from_orm(existing_task).model_dump_json())
     }))
     users = db.query(Users).all()
     for user in users:
