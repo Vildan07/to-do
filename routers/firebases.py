@@ -1,6 +1,6 @@
 import os
-from fastapi import APIRouter, HTTPException
-from firebase_admin import credentials, messaging, initialize_app
+from fastapi import APIRouter
+from firebase_admin import credentials, initialize_app
 
 firebase_router = APIRouter(tags=['Firebase'])
 

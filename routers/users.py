@@ -1,13 +1,12 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 from sqlalchemy.orm import Session
-from typing import Optional
 
 from database import get_db
 from models import Users, Tasks
 from routers.auth import get_password_hash, get_current_user
 from schemas.users import UsersCreate, UsersUpdate, FirebaseTokenForm
 from schemas.response_schemas import UsersResponse
-from utils.utils import schema_pagination, send_notification
+from utils.utils import send_notification
 
 users_router = APIRouter(tags=["Users"])
 

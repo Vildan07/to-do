@@ -1,11 +1,8 @@
-from fastapi import APIRouter, status, HTTPException, Depends, WebSocket, WebSocketDisconnect, BackgroundTasks
+from fastapi import APIRouter, status, HTTPException, Depends, WebSocket, WebSocketDisconnect
 from fastapi.encoders import jsonable_encoder
-from firebase_admin import messaging
-from jose import jwt, JWTError
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime
-import asyncio
 
 from models import Tasks, Users
 from routers.auth import get_current_user

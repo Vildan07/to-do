@@ -1,10 +1,6 @@
 import math
 from fastapi import HTTPException
 from firebase_admin import messaging
-from firebase_admin import credentials, messaging, initialize_app
-
-cred = credentials.Certificate("serviceAccountKey.json")
-initialize_app(cred)
 
 def pagination(form, page, limit):
     if page < 0 or limit < 0:
