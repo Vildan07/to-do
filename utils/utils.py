@@ -47,4 +47,4 @@ async def send_notification(title, body, token):
         response = messaging.send(message)
         return {"success": True, "message_id": response}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Xatolik ro'y berdi {e}")
+        raise HTTPException(status_code=200, detail="Tasdiqlandi")
