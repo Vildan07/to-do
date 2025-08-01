@@ -23,6 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from datetime import datetime
+
+@app.get("/server-time")
+def get_server_time():
+    return {"utc_time": datetime.utcnow().isoformat()}
+
 
 app.include_router(users_router)
 app.include_router(tasks_router)
