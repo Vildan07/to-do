@@ -40,10 +40,10 @@ async def create_task(task: TasksCreate, db: Session = Depends(get_db), current_
         db=db
     )
     # WebSocket broadcast
-    await manager.broadcast(json.dumps({
-        "event": "task_created",
-        "task": jsonable_encoder(TasksResponse.from_orm(new_task))
-    }))
+    # await manager.broadcast(json.dumps({
+    #     "event": "task_created",
+    #     "task": jsonable_encoder(TasksResponse.from_orm(new_task))
+    # }))
     users = db.query(Users).all()
     for user in users:
         if user.firebase_token:
