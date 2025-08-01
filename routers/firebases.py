@@ -1,16 +1,11 @@
-import os
 from firebase_admin import credentials, initialize_app
+import os
 
 def init_firebase():
-    FIREBASE_KEY = os.getenv("FIREBASE_KEY")
-
-    if FIREBASE_KEY:
-        with open("serviceAccountKey.json", "w") as f:
-            f.write(FIREBASE_KEY)
-
+    if os.path.exists("serviceAccountKey.json"):
         cred = credentials.Certificate("serviceAccountKey.json")
         try:
             initialize_app(cred)
         except ValueError:
-            # Firebase already initialized
+            # Already initialized
             pass
