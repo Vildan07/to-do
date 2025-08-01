@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -20,8 +20,11 @@ class Users(Base):
 
 class Tasks(Base):
     __tablename__ = "tasks"
+    __table_args__ = (
+        UniqueConstraint("user_id", "title", name="uix_user_task_title"),
+    )
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    title = Column(String(255), unique=True)
+    title = Column(String(255))
     text = Column(String(255))
     status = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
