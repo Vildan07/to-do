@@ -29,6 +29,8 @@ from datetime import datetime
 def get_server_time():
     return {"utc_time": datetime.utcnow().isoformat()}
 
+print("Server UTC Time:", datetime.utcnow())
+
 
 app.include_router(users_router)
 app.include_router(tasks_router)

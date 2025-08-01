@@ -29,8 +29,8 @@ async def create_task(task: TasksCreate, db: Session = Depends(get_db), current_
         text=task.text,
         status=task.status,
         user_id=current_user.id,
-        created_at=datetime.now(),
-        updated_at=datetime.now()
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
     )
     db.add(new_task)
     db.commit()
@@ -148,7 +148,7 @@ async def update_task(task_id: int, task: TasksUpdate, db: Session = Depends(get
         if key != "updated_at":
             setattr(existing_task, key, value)
 
-    existing_task.updated_at = datetime.now()
+    existing_task.updated_at = datetime.utcnow()
 
     db.commit()
     db.refresh(existing_task)
