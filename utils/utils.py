@@ -64,8 +64,8 @@ async def send_notification(title, body, token):
 
 def process_excel_tasks(file_bytes: bytes, db: Session, current_user: UsersResponse):
     try:
-        # Попробуем открыть через pandas (поддерживает больше форматов)
-        excel_data = pd.read_excel(BytesIO(file_bytes), engine=None)  # engine подбирается автоматически
+        excel_data = pd.read_excel(BytesIO(file_bytes), engine=None)
+        excel_data.columns = [str(col).strip().lower() for col in excel_data.columns]
     except Exception as e:
         raise Exception(f"Excel faylni o'qib bo'lmadi: {e}")
 

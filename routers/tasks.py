@@ -206,7 +206,7 @@ async def upload_tasks_by_excel(
 
     file_bytes = await file.read()
     bg_task.add_task(process_excel_tasks, file_bytes, db, current_user)
-    return {"message": "Fayl qabul qilindi. Orqa fonda tahlil qilinadi."}
+    return {"message": "Fayl qabul qilindi. Orqa fonda tahlil qilinmoqda."}
 
 
 
