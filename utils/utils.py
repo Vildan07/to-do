@@ -1,6 +1,18 @@
 import math
-from fastapi import HTTPException
+from datetime import datetime
+from io import BytesIO
+
+from fastapi import HTTPException, Depends
 from firebase_admin import messaging
+from sqlalchemy.orm import Session
+from openpyxl import load_workbook
+import pandas as pd
+
+from models import Tasks
+from routers.auth import get_current_user
+from database import get_db
+from schemas.response_schemas import UsersResponse
+
 
 def pagination(form, page, limit):
     if page < 0 or limit < 0:
@@ -48,3 +60,32 @@ async def send_notification(title, body, token):
         return {"success": True, "message_id": response}
     except Exception as e:
         raise HTTPException(status_code=200, detail="Tasdiqlandi")
+
+
+def process_excel_tasks(file_bytes: bytes, db: Session, current_user: UsersResponse):
+    try:
+        # Попробуем открыть через pandas (поддерживает больше форматов)
+        excel_data = pd.read_excel(BytesIO(file_bytes), engine=None)  # engine подбирается автоматически
+    except Exception as e:
+        raise Exception(f"Excel faylni o'qib bo'lmadi: {e}")
+
+    for index, row in excel_data.iterrows():
+        title = str(row.get("title", "")).strip()
+        text = str(row.get("text", "")).strip()
+
+        if not title or not text:
+            continue
+
+        existing_task = db.query(Tasks).filter_by(user_id=current_user.id, title=title).first()
+        if existing_task:
+            continue
+
+        task = Tasks(
+            title=title,
+            text=text,
+            user_id=current_user.id,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
+        )
+        db.add(task)
+    db.commit()

@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-engine = create_engine("mysql+pymysql://root:lccGZarSnbELATjAoMWOyIHYpnnbjKLY@mysql.railway.internal:3306/railway")
+engine = create_engine("mysql+pymysql://root:cQdtLwArhTfradHhNcihKoiOwTlifeMY@mysql-eemf.railway.internal:3306/railway")
+# engine = create_engine("mysql+pymysql://root:123456@localhost:3306/todo")
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 def get_db():

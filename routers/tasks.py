@@ -1,4 +1,6 @@
-from fastapi import APIRouter, status, HTTPException, Depends, WebSocket, WebSocketDisconnect
+from fastapi import (
+    APIRouter, status, HTTPException, Depends, WebSocket,
+    WebSocketDisconnect, BackgroundTasks, UploadFile, File)
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -6,7 +8,7 @@ from datetime import datetime
 
 from models import Tasks, Users
 from routers.auth import get_current_user
-from utils.utils import send_notification
+from utils.utils import send_notification, process_excel_tasks
 from schemas.tasks import TasksCreate, TasksUpdate
 from schemas.response_schemas import TasksResponse, UsersResponse
 from database import get_db
@@ -182,6 +184,30 @@ async def websocket_tasks(websocket: WebSocket):
             await websocket.receive_text()  # просто держим соединение
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+
+
+ALLOWED_EXCEL_TYPES = [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # .xlsx
+    "application/vnd.ms-excel",  # .xls
+    "application/vnd.ms-excel.sheet.macroEnabled.12",  # .xlsm
+    "application/vnd.ms-excel.sheet.binary.macroEnabled.12",  # .xlsb
+]
+
+
+@tasks_router.post("/tasks/upload_file", status_code=201)
+async def upload_tasks_by_excel(
+    bg_task: BackgroundTasks,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: UsersResponse = Depends(get_current_user)
+):
+    if file.content_type not in ALLOWED_EXCEL_TYPES:
+        raise HTTPException(status_code=400, detail="Faqat Excel fayllarini yuklash mumkin!")
+
+    file_bytes = await file.read()
+    bg_task.add_task(process_excel_tasks, file_bytes, db, current_user)
+    return {"message": "Fayl qabul qilindi. Orqa fonda tahlil qilinadi."}
+
 
 
 
